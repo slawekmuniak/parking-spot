@@ -24,19 +24,19 @@ const items = [
         to: "11.11.2022 14:00",
     },
     {
-        id: 0,
+        id: 1,
         registrationNumber: "KR 123344",
         from: "11.11.2022 13:00",
         to: "11.11.2022 14:00",
     },
     {
-        id: 0,
+        id: 2,
         registrationNumber: "KR 123344",
         from: "11.11.2022 13:00",
         to: "11.11.2022 14:00",
     },
     {
-        id: 0,
+        id: 3,
         registrationNumber: "KR 123344",
         from: "11.11.2022 13:00",
         to: "11.11.2022 14:00",
@@ -46,11 +46,11 @@ const items = [
 export function ReservationList(): JSX.Element {
     return (
         <div>
-            <h2 className="title">
+            <h4 className="title">
                 <span>My reservations</span>
                 <Button appearance="primary" aria-label="Add" >+ Add reservation</Button>
-            </h2>
-            <Table size="small">
+            </h4>
+            <Table size="extra-small">
                 <TableHeader>
                     <TableRow>
                         {columns.map((column) => (

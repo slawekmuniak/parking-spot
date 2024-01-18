@@ -9,13 +9,13 @@ export default function Tab() {
   return (
     <div className={themeString === "default" ? "light" : themeString === "dark" ? "dark" : "contrast"}>
       <div className="panel">
-          <VehicleList/>
+        <VehicleList />
       </div>
       <div className="panel">
-          <ReservationList/>
+        <ReservationList />
       </div>
       <div className="panel">
-          <ParkingSpotDashboard/>
+        <ParkingSpotDashboard />
       </div>
     </div>
   );

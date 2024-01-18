@@ -1,39 +1,43 @@
 import { Dialog, DialogTrigger, Button, DialogSurface, DialogBody, DialogTitle, DialogContent, Label, Input, DialogActions, makeStyles } from "@fluentui/react-components";
 import React from "react";
+import { IVehicle } from "../../models/IVehicle";
 
 const useStyles = makeStyles({
     content: {
-      display: "flex",
-      flexDirection: "column",
-      rowGap: "10px",
+        display: "flex",
+        flexDirection: "column",
+        rowGap: "10px",
     },
-  });
+});
 
-export default function VehicleAddEditDialog() {
+export default function VehicleFormDialog(props: {
+    vehicle: IVehicle,
+    showDialog: boolean,
+    onOpenChange: (open: boolean) => void,
+    onSubmit: () => void
+}) {
     const styles = useStyles();
+
     const handleSubmit = (ev: React.FormEvent) => {
         ev.preventDefault();
-        alert("form submitted!");
-      };
+        props.onSubmit();
+    };
 
     return (
-        <Dialog modalType="non-modal">
-            <DialogTrigger disableButtonEnhancement>
-                <Button>Open formulary dialog</Button>
-            </DialogTrigger>
+        <Dialog open={props.showDialog} onOpenChange={(event, data) => props.onOpenChange(data.open)}>
             <DialogSurface aria-describedby={undefined}>
                 <form onSubmit={handleSubmit}>
                     <DialogBody>
-                        <DialogTitle>Dialog title</DialogTitle>
+                        <DialogTitle>Add/Edit vehicle</DialogTitle>
                         <DialogContent className={styles.content}>
-                            <Label required htmlFor={"email-input"}>
-                                Email input
+                            <Label required htmlFor={"registrationNumber"}>
+                                Registration number
                             </Label>
-                            <Input required type="email" id={"email-input"} />
-                            <Label required htmlFor={"password-input"}>
-                                Password input
+                            <Input required type="text" id={"registrationNumber"} />
+                            <Label required htmlFor={"description"}>
+                                Description
                             </Label>
-                            <Input required type="password" id={"password-input"} />
+                            <Input required type="text" id={"description"} />
                         </DialogContent>
                         <DialogActions>
                             <DialogTrigger disableButtonEnhancement>

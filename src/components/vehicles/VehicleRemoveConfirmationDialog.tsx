@@ -1,12 +1,13 @@
 import { Dialog, DialogTrigger, Button, DialogSurface, DialogBody, DialogTitle, DialogContent, DialogActions } from "@fluentui/react-components";
 import React from "react";
 
-export default function VehicleRemoveConfirmationDialog() {
+export default function VehicleRemoveConfirmationDialog(props: {
+    onOpenChange: (opened: boolean) => void
+    onRemove: () => void
+    showDialog: boolean
+}) {
     return (
-        <Dialog>
-            <DialogTrigger disableButtonEnhancement>
-                <Button>Open dialog</Button>
-            </DialogTrigger>
+        <Dialog open={props.showDialog} onOpenChange={(event, data) => props.onOpenChange(data.open)}>
             <DialogSurface>
                 <DialogBody>
                     <DialogTitle>Vehicle removal</DialogTitle>
@@ -17,7 +18,7 @@ export default function VehicleRemoveConfirmationDialog() {
                         <DialogTrigger disableButtonEnhancement>
                             <Button appearance="secondary">Cancel</Button>
                         </DialogTrigger>
-                        <Button appearance="primary">Remove</Button>
+                        <Button appearance="primary" onClick={() => props.onRemove()}>Remove</Button>
                     </DialogActions>
                 </DialogBody>
             </DialogSurface>
