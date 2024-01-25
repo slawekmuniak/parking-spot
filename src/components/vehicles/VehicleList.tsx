@@ -1,11 +1,10 @@
-import { Table, TableHeader, TableRow, TableHeaderCell, TableBody, TableCell, TableCellLayout, Avatar, Button } from "@fluentui/react-components";
+import { Table, TableHeader, TableRow, TableHeaderCell, TableBody, TableCell, TableCellLayout, Button } from "@fluentui/react-components";
 import React, { useState } from "react";
 import {
     EditRegular,
     DeleteRegular,
     VehicleCarRegular,
     CommentNoteRegular,
-    ContactCardRegular,
     ArrowRightRegular
 } from "@fluentui/react-icons";
 import VehicleRemoveConfirmationDialog from "./VehicleRemoveConfirmationDialog";
