@@ -82,8 +82,7 @@ export function ParkingSpotDashboard(): JSX.Element {
                 <span>All parking spot reservations</span>
                 <Button appearance="primary" aria-label="Add" >+ Add parking spot</Button>
             </h4>
-            <div>
-
+            <div style={{ display: "flex" }}>
                 <Button icon={<CalendarTodayRegular />} aria-label="Today" >Today</Button>
                 <Button icon={<IosArrowLtr24Regular />} aria-label="Prev" />
                 <DatePicker placeholder="Select a date..." />

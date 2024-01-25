@@ -8,11 +8,14 @@ export default function Tab() {
   const { themeString } = useContext(TeamsFxContext);
   return (
     <div className={themeString === "default" ? "light" : themeString === "dark" ? "dark" : "contrast"}>
-      <div className="panel">
-        <VehicleList />
-      </div>
-      <div className="panel">
-        <ReservationList />
+
+      <div className="horizontal-panel">
+        <div className="panel">
+          <VehicleList />
+        </div>
+        <div className="panel">
+          <ReservationList />
+        </div>
       </div>
       <div className="panel">
         <ParkingSpotDashboard />

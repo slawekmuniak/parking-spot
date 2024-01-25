@@ -1,5 +1,5 @@
 import { Table, TableHeader, TableRow, TableHeaderCell, TableBody, TableCell, TableCellLayout, Button } from "@fluentui/react-components";
-import React from "react";
+import React, { useState } from "react";
 import {
     EditRegular,
     DeleteRegular,
@@ -8,12 +8,21 @@ import {
     ArrowImportRegular,
     ArrowRightRegular
 } from "@fluentui/react-icons";
+import { IReservation } from "../../models/IReservation";
+import ReservationFormDialog from "./ReservationFormDialog";
+import ReservationRemoveConfirmationDialog from "./ReservationRemoveConfirmationDialog";
 
+const defaultReservation: IReservation = {
+    id: -1,
+    registrationNumber: "",
+    description: "",
+    owner: ""
+}
 const columns = [
-    { columnKey: "registrationNumber", label: "Registration number", icon: <VehicleCarRegular/> },
-    { columnKey: "from", label: "From", icon: <ArrowExportRegular/> },
-    { columnKey: "to", label: "To", icon: <ArrowImportRegular/> },
-    { columnKey: "actions", label: "Actions", icon: <ArrowRightRegular/> },
+    { columnKey: "registrationNumber", label: "Registration number", icon: <VehicleCarRegular /> },
+    { columnKey: "from", label: "From", icon: <ArrowExportRegular /> },
+    { columnKey: "to", label: "To", icon: <ArrowImportRegular /> },
+    { columnKey: "actions", label: "Actions", icon: <ArrowRightRegular />, className: "actions" },
 ];
 
 const items = [
@@ -44,18 +53,50 @@ const items = [
 ];
 
 export function ReservationList(): JSX.Element {
+
+    const [reservation, setReservation] = useState<IReservation>({ ...defaultReservation });
+    const [showRemoveDialog, setShowRemoveDialog] = useState(false);
+    const [showReservationFormDialog, setShowReservationFormDialog] = useState(false);
+
+    const removeReservation = (reservation: IReservation) => {
+        setReservation(reservation);
+        setShowRemoveDialog(true);
+    }
+
+    const removalConfirmed = () => {
+        setReservation({ ...defaultReservation });
+        setShowRemoveDialog(false);
+    }
+
+    const removalConfirmationDialogOpenChanged = (open: boolean) => {
+        setShowRemoveDialog(open);
+    }
+
+    const editReservation = (Reservation: IReservation) => {
+        setReservation(Reservation);
+        setShowReservationFormDialog(true);
+    }
+
+    const reservationFormSubmitted = () => {
+        setShowReservationFormDialog(false);
+    }
+
+    const reservationFormDialogOpenChanged = (open: boolean) => {
+        setShowReservationFormDialog(open);
+    }
+
     return (
         <div>
             <h4 className="title">
                 <span>My reservations</span>
-                <Button appearance="primary" aria-label="Add" >+ Add reservation</Button>
+                <Button appearance="primary" aria-label="Add" onClick={() => { editReservation(defaultReservation) }}>+ Add reservation</Button>
             </h4>
             <Table size="extra-small">
                 <TableHeader>
                     <TableRow>
                         {columns.map((column) => (
                             <TableHeaderCell key={column.columnKey}>
-                                <TableCellLayout media={column.icon}>
+                                <TableCellLayout media={column.icon} className={column.className}>
                                     {column.label}
                                 </TableCellLayout>
                             </TableHeaderCell>
@@ -69,15 +110,18 @@ export function ReservationList(): JSX.Element {
                             <TableCell>{item.from}</TableCell>
                             <TableCell>{item.to}</TableCell>
                             <TableCell role="gridcell" tabIndex={0}>
-                                <TableCellLayout>
-                                    <Button icon={<EditRegular />} aria-label="Edit" />
-                                    <Button icon={<DeleteRegular />} aria-label="Delete" />
+                                <TableCellLayout className="actions">
+                                    <Button icon={<EditRegular />} aria-label="Edit" onClick={() => { editReservation(item) }} />
+                                    <Button icon={<DeleteRegular />} aria-label="Delete" onClick={() => { removeReservation(item) }} />
                                 </TableCellLayout>
                             </TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
             </Table>
+
+            <ReservationFormDialog reservatino={reservation} showDialog={showReservationFormDialog} onSubmit={reservationFormSubmitted} onOpenChange={reservationFormDialogOpenChanged} />
+            <ReservationRemoveConfirmationDialog showDialog={showRemoveDialog} onRemove={removalConfirmed} onOpenChange={removalConfirmationDialogOpenChanged} />
         </div>
     );
 }

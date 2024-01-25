@@ -14,7 +14,7 @@ import { IVehicle } from "../../models/IVehicle";
 const columns = [
     { columnKey: "registrationNumber", label: "Registration number", icon: <VehicleCarRegular /> },
     { columnKey: "description", label: "Description", icon: <CommentNoteRegular /> },
-    { columnKey: "actions", label: "Actions", icon: <ArrowRightRegular /> },
+    { columnKey: "actions", label: "Actions", icon: <ArrowRightRegular />, className: "actions" },
 ];
 
 const defaultVehicle: IVehicle = {
@@ -76,7 +76,7 @@ export function VehicleList(): JSX.Element {
         setShowVehicleFormDialog(true);
     }
 
-    const vehicleFormSubmitted = () =>{
+    const vehicleFormSubmitted = () => {
         setShowVehicleFormDialog(false);
     }
 
@@ -88,14 +88,14 @@ export function VehicleList(): JSX.Element {
         <div>
             <h4 className="title">
                 <span>My vehicles</span>
-                <Button appearance="primary" aria-label="Add"  onClick={() => { editVehicle(defaultVehicle) }}>+ Add vehicle</Button>
+                <Button appearance="primary" aria-label="Add" onClick={() => { editVehicle(defaultVehicle) }}>+ Add vehicle</Button>
             </h4>
             <Table size="extra-small">
                 <TableHeader>
                     <TableRow>
                         {columns.map((column) => (
                             <TableHeaderCell key={column.columnKey}>
-                                <TableCellLayout media={column.icon}>
+                                <TableCellLayout media={column.icon} className={column.className}>
                                     {column.label}
                                 </TableCellLayout>
                             </TableHeaderCell>
@@ -108,9 +108,9 @@ export function VehicleList(): JSX.Element {
                             <TableCell>{item.registrationNumber}</TableCell>
                             <TableCell>{item.description}</TableCell>
                             <TableCell role="gridcell" tabIndex={0}>
-                                <TableCellLayout>
+                                <TableCellLayout className="actions">
                                     <Button icon={<EditRegular />} aria-label="Edit" onClick={() => { editVehicle(item) }} />
-                                    <Button icon={<DeleteRegular />} onClick={() => { removeVehicle(item) }} aria-label="Delete" />
+                                    <Button icon={<DeleteRegular />} aria-label="Delete" onClick={() => { removeVehicle(item) }} />
                                 </TableCellLayout>
                             </TableCell>
                         </TableRow>

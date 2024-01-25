@@ -1,7 +1,7 @@
 import { Dialog, DialogTrigger, Button, DialogSurface, DialogBody, DialogTitle, DialogContent, DialogActions } from "@fluentui/react-components";
 import React from "react";
 
-export default function VehicleRemoveConfirmationDialog(props: {
+export default function ReservationRemoveConfirmationDialog(props: {
     onOpenChange: (opened: boolean) => void
     onRemove: () => void
     showDialog: boolean
@@ -10,9 +10,9 @@ export default function VehicleRemoveConfirmationDialog(props: {
         <Dialog open={props.showDialog} onOpenChange={(event, data) => props.onOpenChange(data.open)}>
             <DialogSurface>
                 <DialogBody>
-                    <DialogTitle>Vehicle</DialogTitle>
+                    <DialogTitle>Reseervation</DialogTitle>
                     <DialogContent>
-                        Do you want to remove selected vehicle data? All reservations made with this vehicle will be removed as well.
+                        Do you want to remove selected reservation?
                     </DialogContent>
                     <DialogActions>
                         <DialogTrigger disableButtonEnhancement>
