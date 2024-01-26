@@ -9,6 +9,7 @@
     "@fluentui/react-components": "^9.18.0",
     "@fluentui/react-calendar-compat": "^0.0.16",
     "@fluentui/react-datepicker-compat": "^0.4.17",
+    "@fluentui/react-timepicker-compat": "^0.1.6",
     "@microsoft/teams-js": "^2.13.0",
     "@microsoft/teamsfx": "^2.2.0",
     "@microsoft/teamsfx-react": "^3.0.0",

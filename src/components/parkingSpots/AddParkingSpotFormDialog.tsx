@@ -1,8 +1,6 @@
-import { Dialog, DialogTrigger, Button, DialogSurface, DialogBody, DialogTitle, DialogContent, DialogActions, makeStyles, Field, Combobox, Option } from "@fluentui/react-components";
-import { TimePicker } from "@fluentui/react-timepicker-compat";
-import { DatePicker } from "@fluentui/react-datepicker-compat";
+import { Dialog, DialogTrigger, Button, DialogSurface, DialogBody, DialogTitle, DialogContent, Label, Input, DialogActions, makeStyles, Field } from "@fluentui/react-components";
 import React from "react";
-import { IReservation } from "../../models/IReservation";
+import { IVehicle } from "../../models/IVehicle";
 
 const useStyles = makeStyles({
     content: {
@@ -12,8 +10,7 @@ const useStyles = makeStyles({
     },
 });
 
-export default function ReservationFormDialog(props: {
-    reservatino: IReservation,
+export default function AddParkingSpotFormDialog(props: {
     showDialog: boolean,
     onOpenChange: (open: boolean) => void,
     onSubmit: () => void
@@ -30,21 +27,10 @@ export default function ReservationFormDialog(props: {
             <DialogSurface aria-describedby={undefined}>
                 <form onSubmit={handleSubmit}>
                     <DialogBody>
-                        <DialogTitle>Add reservation</DialogTitle>
+                        <DialogTitle>Add Parking spot</DialogTitle>
                         <DialogContent className={styles.content}>
-                            <Field label="Vehicle" required>
-                                <Combobox placeholder="Select an vehicle">
-                                    <Option key={1}> ff </Option>
-                                </Combobox>
-                            </Field>
-                            <Field label="Date" required>
-                                <DatePicker placeholder="Select a date..." />
-                            </Field>
-                            <Field label="From" required>
-                                <TimePicker/>
-                            </Field>
-                            <Field label="To" required>
-                                <TimePicker/>
+                            <Field label="Parking spot name">
+                                <Input required type="text" />
                             </Field>
                         </DialogContent>
                         <DialogActions>

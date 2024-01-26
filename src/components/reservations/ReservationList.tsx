@@ -72,7 +72,7 @@ export function ReservationList(): JSX.Element {
         setShowRemoveDialog(open);
     }
 
-    const editReservation = (Reservation: IReservation) => {
+    const addReservation = (Reservation: IReservation) => {
         setReservation(Reservation);
         setShowReservationFormDialog(true);
     }
@@ -89,7 +89,7 @@ export function ReservationList(): JSX.Element {
         <div>
             <h4 className="title">
                 <span>My reservations</span>
-                <Button appearance="primary" aria-label="Add" onClick={() => { editReservation(defaultReservation) }}>+ Add reservation</Button>
+                <Button appearance="primary" aria-label="Add" onClick={() => { addReservation(defaultReservation) }}>+ Add reservation</Button>
             </h4>
             <Table size="extra-small">
                 <TableHeader>
@@ -111,7 +111,6 @@ export function ReservationList(): JSX.Element {
                             <TableCell>{item.to}</TableCell>
                             <TableCell role="gridcell" tabIndex={0}>
                                 <TableCellLayout className="actions">
-                                    <Button icon={<EditRegular />} aria-label="Edit" onClick={() => { editReservation(item) }} />
                                     <Button icon={<DeleteRegular />} aria-label="Delete" onClick={() => { removeReservation(item) }} />
                                 </TableCellLayout>
                             </TableCell>

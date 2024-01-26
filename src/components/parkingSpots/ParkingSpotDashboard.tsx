@@ -1,12 +1,13 @@
 import { Table, TableHeader, TableRow, TableHeaderCell, TableBody, TableCell, TableCellLayout, Button, Tooltip } from "@fluentui/react-components";
 import { DatePicker } from "@fluentui/react-datepicker-compat";
-import React from "react";
+import React, { useState } from "react";
 import {
     VehicleCarRegular,
     CalendarTodayRegular,
     IosArrowLtr24Regular,
     IosArrowRtl24Regular
 } from "@fluentui/react-icons";
+import AddParkingSpotFormDialog from "./AddParkingSpotFormDialog";
 
 const columns = [
     { columnKey: "spot", label: "", icon: <VehicleCarRegular /> },
@@ -76,11 +77,24 @@ const items = [
 ];
 
 export function ParkingSpotDashboard(): JSX.Element {
+
+
+    const [showAddParkingSpotFormDialog, setShowAddParkingSpotFormDialog] = useState(false);
+
+    const addParkingSpotDialogOpenChanged = (open: boolean) => {
+        setShowAddParkingSpotFormDialog(open);
+    }
+
+    const addParkingSpotFormSubmitted = () => {
+        setShowAddParkingSpotFormDialog(false);
+    }
+
     return (
         <div>
             <h4 className="title">
                 <span>All parking spot reservations</span>
-                <Button appearance="primary" aria-label="Add" >+ Add parking spot</Button>
+                <Button appearance="primary" aria-label="Add" onClick={() => { setShowAddParkingSpotFormDialog(true); }}>+ Add parking spot</Button>
+                <AddParkingSpotFormDialog showDialog={showAddParkingSpotFormDialog} onSubmit={addParkingSpotFormSubmitted} onOpenChange={addParkingSpotDialogOpenChanged} ></AddParkingSpotFormDialog>
             </h4>
             <div style={{ display: "flex" }}>
                 <Button icon={<CalendarTodayRegular />} aria-label="Today" >Today</Button>
