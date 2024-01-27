@@ -1,6 +1,5 @@
-import { Dialog, DialogTrigger, Button, DialogSurface, DialogBody, DialogTitle, DialogContent, Label, Input, DialogActions, makeStyles, Field } from "@fluentui/react-components";
+import { Dialog, DialogTrigger, Button, DialogSurface, DialogBody, DialogTitle, DialogContent, Input, DialogActions, makeStyles, Field } from "@fluentui/react-components";
 import React from "react";
-import { IVehicle } from "../../models/IVehicle";
 
 const useStyles = makeStyles({
     content: {

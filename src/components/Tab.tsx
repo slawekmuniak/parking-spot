@@ -1,8 +1,9 @@
 import { useContext } from "react";
-import { TeamsFxContext } from "./Context";
+import { TeamsFxContext } from "./TeamsFxContext";
 import { VehicleList } from "./vehicles/VehicleList";
 import { ReservationList } from "./reservations/ReservationList";
 import { ParkingSpotDashboard } from "./parkingSpots/ParkingSpotDashboard";
+import React from "react";
 
 export default function Tab() {
   const { themeString } = useContext(TeamsFxContext);

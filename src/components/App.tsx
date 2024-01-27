@@ -12,9 +12,9 @@ import { useTeamsUserCredential } from "@microsoft/teamsfx-react";
 import Privacy from "./Privacy";
 import TermsOfUse from "./TermsOfUse";
 import Tab from "./Tab";
-import { TeamsFxContext } from "./Context";
-import config from "./sample/lib/config";
-
+import { TeamsFxContext } from "./TeamsFxContext";
+import config from "../common/config";
+import React from "react";
 /**
  * The main app which handles the initialization and routing
  * of the app.
