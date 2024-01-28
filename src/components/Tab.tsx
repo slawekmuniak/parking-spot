@@ -10,7 +10,7 @@ import config from "../common/config";
 export default function Tab() {
 
   const [isLoading, setIsLoading] = useState(true);
-  const [showLoadingPage, setShowLoadingPage] = useState(true);
+  const [showLoginPage, setShowLoginPage] = useState(true);
   const [token, setToken] = useState<AccessToken | null>();
   const { themeString } = useContext(TeamsFxContext);
 
@@ -23,17 +23,22 @@ export default function Tab() {
   useEffect(() => {
     async function getToken() {
       try {
+        setIsLoading(true);
         const token = await credential.getToken(scope);
         setToken(token);
-        setShowLoadingPage(token === null);
+        setShowLoginPage(token === null);
       } catch (error) {
-        setShowLoadingPage(true);
+        setShowLoginPage(true);
+      } finally {
+        setIsLoading(false);
       }
-    } if (!token) {
+    }
+
+    console.log(token);
+    if (!token) {
       getToken();
     }
-    setIsLoading(false);
-  }, [])
+  }, []);
 
   const loginBtnClick = async () => {
     try {
@@ -51,8 +56,8 @@ export default function Tab() {
   return (
     <div className={themeString === "default" ? "light" : themeString === "dark" ? "dark" : "contrast"}>
       {isLoading ?? <Spinner></Spinner>}
-      {!isLoading && showLoadingPage && <Login onLogin={() => loginBtnClick()} />}
-      {!isLoading && !showLoadingPage && <Dashboard />}
+      {!isLoading && showLoginPage && <Login onLogin={() => loginBtnClick()} />}
+      {!isLoading && !showLoginPage && <Dashboard />}
     </div>
   );
 }
