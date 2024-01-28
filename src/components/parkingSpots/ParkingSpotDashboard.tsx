@@ -1,13 +1,14 @@
-import { Table, TableHeader, TableRow, TableHeaderCell, TableBody, TableCell, TableCellLayout, Button, Tooltip } from "@fluentui/react-components";
-import { DatePicker } from "@fluentui/react-datepicker-compat";
-import React, { useState } from "react";
+
+import { Button, Table, TableBody, TableCell, TableCellLayout, TableHeader, TableHeaderCell, TableRow, Tooltip } from "@fluentui/react-components";
 import {
-    VehicleCarRegular,
     CalendarTodayRegular,
     IosArrowLtr24Regular,
-    IosArrowRtl24Regular
+    IosArrowRtl24Regular,
+    VehicleCarRegular
 } from "@fluentui/react-icons";
+import React, { useState } from "react";
 import AddParkingSpotFormDialog from "./AddParkingSpotFormDialog";
+import { DatePicker } from "@fluentui/react-datepicker-compat";
 
 const columns = [
     { columnKey: "spot", label: "", icon: <VehicleCarRegular /> },

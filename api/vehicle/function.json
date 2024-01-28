@@ -7,13 +7,20 @@
       "name": "req",
       "methods": [
         "get",
-        "post"
+        "put",
+        "post",
+        "delete"
       ]
+    },
+    {
+      "direction": "in",
+      "name": "teamsfxContext",
+      "type": "TeamsFx"
     },
     {
       "type": "http",
       "direction": "out",
-      "name": "res"
+      "name": "$return"
     }
   ],
   "scriptFile": "../dist/vehicle/index.js"

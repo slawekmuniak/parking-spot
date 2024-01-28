@@ -21,5 +21,6 @@
     "azureFunctions.projectRuntime": "~4",
     "debug.internalConsoleOptions": "neverOpen",
     "azureFunctions.preDeployTask": "npm prune (functions)",
-    "azureFunctions.templateFilter": "All"
+    "azureFunctions.templateFilter": "All",
+    "typescript.tsdk": "node_modules\\typescript\\lib"
 }

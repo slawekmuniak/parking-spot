@@ -1,20 +1,21 @@
-// https://fluentsite.z22.web.core.windows.net/quick-start
+
 import {
   FluentProvider,
-  teamsLightTheme,
+  Spinner,
   teamsDarkTheme,
   teamsHighContrastTheme,
-  Spinner,
+  teamsLightTheme,
   tokens,
 } from "@fluentui/react-components";
-import { HashRouter as Router, Navigate, Route, Routes } from "react-router-dom";
-import { useTeamsUserCredential } from "@microsoft/teamsfx-react";
+import { Navigate, Route, HashRouter as Router, Routes } from "react-router-dom";
 import Privacy from "./Privacy";
-import TermsOfUse from "./TermsOfUse";
+import React from "react";
 import Tab from "./Tab";
 import { TeamsFxContext } from "./TeamsFxContext";
+import TermsOfUse from "./TermsOfUse";
 import config from "../common/config";
-import React from "react";
+import { useTeamsUserCredential } from "@microsoft/teamsfx-react";
+
 /**
  * The main app which handles the initialization and routing
  * of the app.
@@ -31,8 +32,8 @@ export default function App() {
           themeString === "dark"
             ? teamsDarkTheme
             : themeString === "contrast"
-            ? teamsHighContrastTheme
-            : {
+              ? teamsHighContrastTheme
+              : {
                 ...teamsLightTheme,
                 colorNeutralBackground3: "#eeeeee",
               }

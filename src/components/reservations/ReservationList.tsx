@@ -1,12 +1,11 @@
-import { Table, TableHeader, TableRow, TableHeaderCell, TableBody, TableCell, TableCellLayout, Button } from "@fluentui/react-components";
-import React, { useState } from "react";
 import {
-    DeleteRegular,
-    VehicleCarRegular,
     ArrowExportRegular,
     ArrowImportRegular,
-    ArrowRightRegular
-} from "@fluentui/react-icons";
+    ArrowRightRegular,
+    DeleteRegular,
+    VehicleCarRegular
+} from "@fluentui/react-icons"; import { Button, Table, TableBody, TableCell, TableCellLayout, TableHeader, TableHeaderCell, TableRow } from "@fluentui/react-components";
+import React, { useState } from "react";
 import { IReservation } from "../../models/IReservation";
 import ReservationFormDialog from "./ReservationFormDialog";
 import ReservationRemoveConfirmationDialog from "./ReservationRemoveConfirmationDialog";

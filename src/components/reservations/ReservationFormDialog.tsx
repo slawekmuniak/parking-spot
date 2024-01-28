@@ -1,8 +1,8 @@
-import { Dialog, DialogTrigger, Button, DialogSurface, DialogBody, DialogTitle, DialogContent, DialogActions, makeStyles, Field, Combobox, Option } from "@fluentui/react-components";
-import { TimePicker } from "@fluentui/react-timepicker-compat";
+import { Button, Combobox, Dialog, DialogActions, DialogBody, DialogContent, DialogSurface, DialogTitle, DialogTrigger, Field, Option, makeStyles } from "@fluentui/react-components";
 import { DatePicker } from "@fluentui/react-datepicker-compat";
-import React from "react";
 import { IReservation } from "../../models/IReservation";
+import React from "react";
+import { TimePicker } from "@fluentui/react-timepicker-compat";
 
 const useStyles = makeStyles({
     content: {

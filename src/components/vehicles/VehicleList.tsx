@@ -1,15 +1,14 @@
-import { Table, TableHeader, TableRow, TableHeaderCell, TableBody, TableCell, TableCellLayout, Button } from "@fluentui/react-components";
-import React, { useState } from "react";
 import {
-    EditRegular,
-    DeleteRegular,
-    VehicleCarRegular,
+    ArrowRightRegular,
     CommentNoteRegular,
-    ArrowRightRegular
-} from "@fluentui/react-icons";
-import VehicleRemoveConfirmationDialog from "./VehicleRemoveConfirmationDialog";
-import VehicleFormDialog from "./VehicleFormDialog";
+    DeleteRegular,
+    EditRegular,
+    VehicleCarRegular
+} from "@fluentui/react-icons";import { Button, Table, TableBody, TableCell, TableCellLayout, TableHeader, TableHeaderCell, TableRow } from "@fluentui/react-components";
+import React, { useState } from "react";
 import { IVehicle } from "../../models/IVehicle";
+import VehicleFormDialog from "./VehicleFormDialog";
+import VehicleRemoveConfirmationDialog from "./VehicleRemoveConfirmationDialog";
 
 const columns = [
     { columnKey: "registrationNumber", label: "Registration number", icon: <VehicleCarRegular /> },
