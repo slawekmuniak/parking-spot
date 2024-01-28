@@ -14,13 +14,14 @@ import {
 import { Client } from "@microsoft/microsoft-graph-client";
 import { TokenCredentialAuthenticationProvider } from "@microsoft/microsoft-graph-client/authProviders/azureTokenCredentials";
 import config from "../config";
+import { TeamsFxContext } from "@microsoft/teamsfx-react";
 
 interface Response {
   status: number;
   body: { [key: string]: any };
 }
 
-type TeamsfxContext = { [key: string]: any };
+
 
 /**
  * This function handles requests from teamsfx client.
@@ -43,7 +44,7 @@ type TeamsfxContext = { [key: string]: any };
 export default async function run(
   context: Context,
   req: HttpRequest,
-  teamsfxContext: TeamsfxContext
+  teamsfxContext: TeamsFxContext
 ): Promise<Response> {
   context.log("HTTP trigger function processed a request.");
 

@@ -34,7 +34,7 @@ provision:
   - uses: teamsApp/create
     with:
       # Teams app name
-      name: parking-spot${{APP_NAME_SUFFIX}}
+      name: parking-spot-${{APP_NAME_SUFFIX}}
     # Write the information of created resources into environment file for
     # the specified environment variable(s).
     writeToEnvironmentFile:

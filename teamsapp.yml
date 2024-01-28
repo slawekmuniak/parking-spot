@@ -37,13 +37,14 @@ provision:
   - uses: teamsApp/create
     with:
       # Teams app name
-      name: parking-spot${{APP_NAME_SUFFIX}}
+      name: parking-spot-${{APP_NAME_SUFFIX}}
     # Write the information of created resources into environment file for
     # the specified environment variable(s).
     writeToEnvironmentFile:
       teamsAppId: TEAMS_APP_ID
-
-  - uses: arm/deploy # Deploy given ARM templates parallelly.
+  
+  # Deploy given ARM templates parallelly.
+  - uses: arm/deploy 
     with:
       # AZURE_SUBSCRIPTION_ID is a built-in environment variable,
       # if its value is empty, TeamsFx will prompt you to select a subscription.
@@ -63,7 +64,7 @@ provision:
           # variable before ARM deployment.
           parameters: ./infra/azure.parameters.json
           # Required when deploying ARM template
-          deploymentName: Create-resources-for-tab
+          deploymentName: Create-resources
       # Teams Toolkit will download this bicep CLI version from github for you,
       # will use bicep CLI in PATH if you remove this config.
       bicepCliVersion: v0.9.1

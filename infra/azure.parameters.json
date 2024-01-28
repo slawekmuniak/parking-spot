@@ -1,9 +1,9 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
     "resourceBaseName": {
-      "value": "helloworld${{RESOURCE_SUFFIX}}"
+      "value": "parkingspot${{RESOURCE_SUFFIX}}"
     },
     "aadAppClientId": {
       "value": "${{AAD_APP_CLIENT_ID}}"
@@ -25,6 +25,15 @@
     },
     "functionStorageSKU": {
       "value": "Standard_LRS"
+    },
+    "azureSqlUser": {
+      "value": "${{SQL_USER_NAME}}"
+    },
+    "azureSqlUserPassword": {
+      "value": "${{SQL_PASSWORD}}"
+    },
+    "sqlDatabaseSku":{
+      "value": "Basic"
     }
   }
 }

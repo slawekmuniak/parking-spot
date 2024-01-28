@@ -3,6 +3,10 @@ param storageSKU string
 param functionStorageSKU string
 param functionAppSKU string
 
+param sqlDatabaseSku string
+param azureSqlUser string
+param azureSqlUserPassword string
+
 param aadAppClientId string
 param aadAppTenantId string
 param aadAppOauthAuthorityHost string
@@ -27,8 +31,41 @@ var outlookOnlineAddInAppClientId = 'bc59ab01-8403-45c6-8796-ac3ef710b3e3'
 var authorizedClientApplicationIds = '${teamsMobileOrDesktopAppClientId};${teamsWebAppClientId};${officeWebAppClientId1};${officeWebAppClientId2};${outlookDesktopAppClientId};${outlookWebAppClientId};${officeUwpPwaClientId};${outlookOnlineAddInAppClientId}'
 var allowedClientApplications = '"${teamsMobileOrDesktopAppClientId}","${teamsWebAppClientId}","${officeWebAppClientId1}","${officeWebAppClientId2}","${outlookDesktopAppClientId}","${outlookWebAppClientId}","${officeUwpPwaClientId}","${outlookOnlineAddInAppClientId}"'
 
-// Azure Storage that hosts your static web site
-resource storage 'Microsoft.Storage/storageAccounts@2021-06-01' = {
+var sqlServerName = resourceBaseName
+var sqlDatabaseName = resourceBaseName
+
+// [SQL Server]
+resource sqlServer 'Microsoft.Sql/servers@2021-11-01' = {
+  location: location
+  name: sqlServerName
+  properties: {
+    administratorLogin: azureSqlUser
+    administratorLoginPassword: azureSqlUserPassword
+  }
+}
+
+// [SQL Database]
+resource sqlDatabase 'Microsoft.Sql/servers/databases@2021-11-01' = {
+  parent: sqlServer
+  location: location
+  name: sqlDatabaseName
+  sku: {
+    name: sqlDatabaseSku // You can follow https://aka.ms/teamsfx-bicep-add-param-tutorial to add sqlDatabaseSku property to provisionParameters to override the default value "Basic".
+  }
+}
+
+// [SQL Server] firewall
+resource sqlFirewallRules 'Microsoft.Sql/servers/firewallRules@2021-11-01' = {
+  parent: sqlServer
+  name: 'AllowAzure'
+  properties: {
+    endIpAddress: '0.0.0.0'
+    startIpAddress: '0.0.0.0'
+  }
+}
+
+// [Storage account] Azure Storage that hosts your static web site 
+resource storage 'Microsoft.Storage/storageAccounts@2023-01-01' = {
   kind: 'StorageV2'
   location: location
   name: storageName
@@ -44,8 +81,8 @@ var siteDomain = replace(replace(storage.properties.primaryEndpoints.web, 'https
 var tabEndpoint = 'https://${siteDomain}'
 var aadApplicationIdUri = 'api://${siteDomain}/${aadAppClientId}'
 
-// Compute resources for Azure Functions
-resource serverfarms 'Microsoft.Web/serverfarms@2021-02-01' = {
+// [App Service Plan] Compute resources for Azure Functions 
+resource serverfarms 'Microsoft.Web/serverfarms@2023-01-01' = {
   name: serverfarmsName
   kind: 'functionapp'
   location: location
@@ -55,8 +92,8 @@ resource serverfarms 'Microsoft.Web/serverfarms@2021-02-01' = {
   properties: {}
 }
 
-// Azure Functions that hosts your function code
-resource functionApp 'Microsoft.Web/sites@2021-02-01' = {
+// [Function App] Azure Functions that hosts your function code
+resource functionApp 'Microsoft.Web/sites@2023-01-01' = {
   name: functionAppName
   kind: 'functionapp'
   location: location
@@ -71,11 +108,11 @@ resource functionApp 'Microsoft.Web/sites@2021-02-01' = {
       appSettings: [
         {
           name: ' AzureWebJobsDashboard'
-          value: 'DefaultEndpointsProtocol=https;AccountName=${functionStorage.name};AccountKey=${listKeys(functionStorage.id, functionStorage.apiVersion).keys[0].value};EndpointSuffix=${environment().suffixes.storage}' // Azure Functions internal setting
+          value: 'DefaultEndpointsProtocol=https;AccountName=${functionStorage.name};AccountKey=${functionStorage.listKeys().keys[0].value};EndpointSuffix=${environment().suffixes.storage}' // Azure Functions internal setting
         }
         {
           name: 'AzureWebJobsStorage'
-          value: 'DefaultEndpointsProtocol=https;AccountName=${functionStorage.name};AccountKey=${listKeys(functionStorage.id, functionStorage.apiVersion).keys[0].value};EndpointSuffix=${environment().suffixes.storage}' // Azure Functions internal setting
+          value: 'DefaultEndpointsProtocol=https;AccountName=${functionStorage.name};AccountKey=${functionStorage.listKeys().keys[0].value};EndpointSuffix=${environment().suffixes.storage}' // Azure Functions internal setting
         }
         {
           name: 'FUNCTIONS_EXTENSION_VERSION'
@@ -87,7 +124,7 @@ resource functionApp 'Microsoft.Web/sites@2021-02-01' = {
         }
         {
           name: 'WEBSITE_CONTENTAZUREFILECONNECTIONSTRING'
-          value: 'DefaultEndpointsProtocol=https;AccountName=${storage.name};AccountKey=${listKeys(storage.id, storage.apiVersion).keys[0].value};EndpointSuffix=${environment().suffixes.storage}' // Azure Functions internal setting
+          value: 'DefaultEndpointsProtocol=https;AccountName=${storage.name};AccountKey=${storage.listKeys().keys[0].value};EndpointSuffix=${environment().suffixes.storage}' // Azure Functions internal setting
         }
         {
           name: 'WEBSITE_RUN_FROM_PACKAGE'
@@ -125,6 +162,26 @@ resource functionApp 'Microsoft.Web/sites@2021-02-01' = {
           name: 'WEBSITE_AUTH_AAD_ACL'
           value: '{"allowed_client_applications": [${allowedClientApplications}]}'
         }
+        {
+          name: 'WEBSITE_AUTH_AAD_ACL'
+          value: '{"allowed_client_applications": [${allowedClientApplications}]}'
+        }
+        {
+          name: 'SQL_ENDPOINT'
+          value:sqlServer.properties.fullyQualifiedDomainName
+        }
+        {
+          name: 'SQL_DATABASE_NAME'
+          value: sqlDatabaseName
+        }
+        {
+          name: 'SQL_USER_NAME'
+          value: azureSqlUser
+        }
+        {
+          name: 'SQL_PASSWORD'
+          value: azureSqlUserPassword
+        }
       ]
       ftpsState: 'FtpsOnly'
     }
@@ -132,29 +189,39 @@ resource functionApp 'Microsoft.Web/sites@2021-02-01' = {
 }
 var apiEndpoint = 'https://${functionApp.properties.defaultHostName}'
 
-resource authSettings 'Microsoft.Web/sites/config@2021-02-01' = {
-  name: '${functionApp.name}/authsettings'
+// [Function App] Authentication
+resource authSettings 'Microsoft.Web/sites/config@2023-01-01' = {
+  parent: functionApp
+  name: 'authsettingsV2'
   properties: {
-    enabled: true
-    defaultProvider: 'AzureActiveDirectory'
-    clientId: aadAppClientId
-    issuer: '${oauthAuthority}/v2.0'
-    allowedAudiences: [
-      aadAppClientId
-      aadApplicationIdUri
-    ]
+    identityProviders: {
+      azureActiveDirectory: {
+        enabled: true
+        registration: {
+          clientId: aadAppClientId
+          openIdIssuer: '${oauthAuthority}/v2.0'
+        }
+        validation: {
+          allowedAudiences: [
+            aadAppClientId
+            aadApplicationIdUri
+          ]
+        }
+      }
+    }
   }
 }
 
-// Azure Storage is required when creating Azure Functions instance
-resource functionStorage 'Microsoft.Storage/storageAccounts@2021-06-01' = {
+// [Storage account] Azure Storage is required when creating Azure Functions instance
+resource functionStorage 'Microsoft.Storage/storageAccounts@2023-01-01' = {
   name: functionStorageName
   kind: 'StorageV2'
   location: location
   sku: {
-    name: functionStorageSKU// You can follow https://aka.ms/teamsfx-bicep-add-param-tutorial to add functionStorageSKUproperty to provisionParameters to override the default value "Standard_LRS".
+    name: functionStorageSKU // You can follow https://aka.ms/teamsfx-bicep-add-param-tutorial to add functionStorageSKUproperty to provisionParameters to override the default value "Standard_LRS".
   }
 }
+
 
 // The output will be persisted in .env.{envName}. Visit https://aka.ms/teamsfx-actions/arm-deploy for more details.
 output TAB_AZURE_STORAGE_RESOURCE_ID string = storage.id // used in deploy stage
@@ -162,3 +229,5 @@ output TAB_DOMAIN string = siteDomain
 output TAB_ENDPOINT string = tabEndpoint
 output API_FUNCTION_ENDPOINT string = apiEndpoint
 output API_FUNCTION_RESOURCE_ID string = functionApp.id
+output SQL_ENDPOINT string = sqlServer.properties.fullyQualifiedDomainName
+output SQL_DATABASE_NAME string = sqlDatabaseName
