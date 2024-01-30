@@ -5,7 +5,6 @@ import {
   teamsDarkTheme,
   teamsHighContrastTheme,
   teamsLightTheme,
-  tokens,
 } from "@fluentui/react-components";
 import { Navigate, Route, HashRouter as Router, Routes } from "react-router-dom";
 import Privacy from "./Privacy";
@@ -33,16 +32,13 @@ export default function App() {
             ? teamsDarkTheme
             : themeString === "contrast"
               ? teamsHighContrastTheme
-              : {
-                ...teamsLightTheme,
-                colorNeutralBackground3: "#eeeeee",
-              }
+              : teamsLightTheme
         }
-        style={{ background: tokens.colorNeutralBackground3 }}
+        style={{ width: "100%", }}
       >
         <Router>
           {loading ? (
-            <Spinner style={{ margin: 100 }} />
+            <Spinner className="center" size="huge" label="Loading application ..." />
           ) : (
             <Routes>
               <Route path="/privacy" element={<Privacy />} />
