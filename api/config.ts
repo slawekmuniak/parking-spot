@@ -3,6 +3,9 @@ const config = {
   tenantId: process.env.M365_TENANT_ID,
   clientId: process.env.M365_CLIENT_ID,
   clientSecret: process.env.M365_CLIENT_SECRET,
+  sqlEndpoint: process.env.SQL_ENDPOINT,
+  sqlUserName: process.env.SQL_USER_NAME,
+  sqlPassword: process.env.SQL_PASSWORD,
 };
 
 export default config;
