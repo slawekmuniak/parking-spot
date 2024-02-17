@@ -10,13 +10,15 @@ export default function Login(props: {
   const { teamsUserCredential } = useContext(TeamsFxContext);
   const [userInfo, setUserInfo] = useState<UserInfo>();
 
-  async function getUser() {
-    setUserInfo(await teamsUserCredential?.getUserInfo());
-  }
+
 
   useEffect(() => {
+    async function getUser() {
+      setUserInfo(await teamsUserCredential?.getUserInfo());
+    }
+
     getUser();
-  }, []);
+  }, [teamsUserCredential]);
 
 
   return (

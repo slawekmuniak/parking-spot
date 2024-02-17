@@ -1,55 +1,74 @@
 import { Button, Dialog, DialogActions, DialogBody, DialogContent, DialogSurface, DialogTitle, DialogTrigger, Input, Label, makeStyles } from "@fluentui/react-components";
 import { IVehicle } from "../../models/IVehicle";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const useStyles = makeStyles({
-    content: {
-        display: "flex",
-        flexDirection: "column",
-        rowGap: "10px",
-    },
+  content: {
+    display: "flex",
+    flexDirection: "column",
+    rowGap: "10px",
+  },
 });
 
 export default function VehicleFormDialog(props: {
-    vehicle: IVehicle,
-    showDialog: boolean,
-    onOpenChange: (open: boolean) => void,
-    onSubmit: () => void
+  showDialog: boolean,
+  vehicle: IVehicle,
+  onOpenChange: (open: boolean) => void,
+  onSubmit: (vehicle: IVehicle) => void
 }) {
-    const styles = useStyles();
+  const styles = useStyles();
+  const [vehicleId, setVehicleId] = useState(-1);
+  const [registrationNumber, setRegistrationNumber] = useState("");
+  const [description, setDescription] = useState("");
 
-    const handleSubmit = (ev: React.FormEvent) => {
-        ev.preventDefault();
-        props.onSubmit();
-    };
+  const handleSubmit = (ev: React.FormEvent) => {
+    ev.preventDefault();
+    props.onSubmit({
+      VehicleId: vehicleId,
+      RegistrationNumber: registrationNumber,
+      Description: description,
+    });
+  };
 
-    return (
-        <Dialog open={props.showDialog} onOpenChange={(event, data) => props.onOpenChange(data.open)}>
-            <DialogSurface aria-describedby={undefined}>
-                <form onSubmit={handleSubmit}>
-                    <DialogBody>
-                        <DialogTitle>Add/Edit vehicle</DialogTitle>
-                        <DialogContent className={styles.content}>
-                            <Label required htmlFor={"registrationNumber"}>
-                                Registration number
-                            </Label>
-                            <Input required type="text" id={"registrationNumber"} />
-                            <Label required htmlFor={"description"}>
-                                Description
-                            </Label>
-                            <Input required type="text" id={"description"} />
-                        </DialogContent>
-                        <DialogActions>
-                            <DialogTrigger disableButtonEnhancement>
-                                <Button appearance="secondary">Close</Button>
-                            </DialogTrigger>
-                            <Button type="submit" appearance="primary">
-                                Submit
-                            </Button>
-                        </DialogActions>
-                    </DialogBody>
-                </form>
-            </DialogSurface>
-        </Dialog>
-    );
+  useEffect(() => {
+    setRegistrationNumber(props.vehicle.RegistrationNumber);
+    setDescription(props.vehicle.Description);
+    setVehicleId(props.vehicle.VehicleId);
+  }, [props.vehicle]);
+
+  return (
+    <Dialog open={props.showDialog} onOpenChange={(event, data) => props.onOpenChange(data.open)}>
+      <DialogSurface>
+        <form onSubmit={handleSubmit}>
+          <DialogBody>
+            <DialogTitle>Add vehicle</DialogTitle>
+            <DialogContent>
+              <Label required htmlFor="registrationNumber">Registration number</Label>
+              <Input
+                id="registrationNumber"
+                type="text"
+                required
+                value={registrationNumber}
+                maxLength={50}
+                onChange={(e, d) => setRegistrationNumber(d.value)} />
+              <Label required htmlFor="description">Description</Label>
+              <Input
+                id="description"
+                type="text"
+                required
+                maxLength={50}
+                value={description}
+                onChange={(e, d) => setDescription(d.value)} />
+            </DialogContent>
+            <DialogActions>
+              <DialogTrigger>
+                <Button appearance="secondary">Close</Button>
+              </DialogTrigger>
+              <Button type="submit" appearance="primary">Submit</Button>
+            </DialogActions>
+          </DialogBody>
+        </form>
+      </DialogSurface>
+    </Dialog>
+  );
 }

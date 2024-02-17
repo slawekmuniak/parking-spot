@@ -13,19 +13,18 @@ export default function Tab() {
   const { teamsUserCredential } = useContext(TeamsFxContext);
   const scope = ["User.Read", "User.ReadBasic.All"];
 
-  async function getToken() {
-    try {
-      const token = await teamsUserCredential?.getToken(scope)
-      setToken(token);
-      setShowLoginPage(token === null);
-    } catch (error) {
-      setShowLoginPage(true);
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
   useEffect(() => {
+    async function getToken(): Promise<void> {
+      try {
+        const token = await teamsUserCredential?.getToken(scope)
+        setToken(token);
+        setShowLoginPage(token === null);
+      } catch (error) {
+        setShowLoginPage(true);
+      } finally {
+        setIsLoading(false);
+      }
+    }
     if (!token) {
       getToken();
     }

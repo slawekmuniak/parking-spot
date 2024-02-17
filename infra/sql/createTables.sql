@@ -8,14 +8,23 @@ CREATE TABLE Users
 CREATE TABLE Vehicles
 (
     VehicleId INT IDENTITY PRIMARY KEY,
-    RegistrationNumber NVARCHAR NOT NULL,
-    Description NVARCHAR NULL,
+    RegistrationNumber NVARCHAR(50) NOT NULL,
+    Description NVARCHAR(50) NULL,
     UserId UNIQUEIDENTIFIER NOT NULL,
+)
+
+CREATE TABLE ParkingSpots
+(
+    ParkingSpotId INT IDENTITY PRIMARY KEY,
+    Description NVARCHAR(50) NULL,
+    TenantId UNIQUEIDENTIFIER NOT NULL,
+    CreatedBy UNIQUEIDENTIFIER NOT NULL,
 )
 
 CREATE TABLE Reservations
 (
     ReservationId INT IDENTITY PRIMARY KEY,
+    ParkingSpotId  INT NOT NULL,
     VehicleId INT NOT NULL,
     DateTimeFrom DATETIME NOT NULL,
     DateTimeTo DATETIME NOT NULL,

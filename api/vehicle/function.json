@@ -7,10 +7,10 @@
       "name": "req",
       "methods": [
         "get",
-        "put",
         "post",
         "delete"
-      ]
+      ],
+      "route": "vehicle/{VehicleId:int?}"
     },
     {
       "direction": "in",
