@@ -6,17 +6,17 @@ import { Connection } from "tedious";
 import { getCurrentUserInfo } from "../common/user.service";
 import { executeSqlQuery, getDbConnection } from "../common/db.service";
 
-const getGetUserreservationsQuery = (userId: string) => {
-  return `SELECT ReservationId, VehicleId, From, To
+const getGetUserReservationsQuery = (userId: string) => {
+  return `SELECT ReservationId, ParkingSpotId, VehicleId, DateTimeFrom, DateTimeTo
           FROM dbo.Reservations WHERE UserId = '${userId}'`;
 };
 
-const getAddreservationQuery = (userId: string, reservation: IReservation) => {
-  return `INSERT INTO dbo.Reservations (VehicleId, From, To, UserId) 
-          VALUES (N'${reservation.VehicleId}', N'${reservation.From}', N'${reservation.To}', N'${userId}')`;
+const getAddReservationQuery = (userId: string, reservation: IReservation) => {
+  return `INSERT INTO dbo.Reservations (ParkingSpotId, VehicleId, DateTimeFrom, DateTimeTo, UserId) 
+          VALUES (N'${reservation.ParkingSpotId}', N'${reservation.VehicleId}', N'${reservation.DateTimeFrom}', N'${reservation.DateTimeTo}', N'${userId}')`;
 };
 
-const getDeleteVewhicleQuery = (userId: string, reservationId: number) => {
+const getDeleteReservationQuery = (userId: string, reservationId: number) => {
   return `DELETE FROM dbo.Reservations 
           WHERE ReservationId = ${reservationId} AND UserId = '${userId}'`;
 }
@@ -24,15 +24,15 @@ const getDeleteVewhicleQuery = (userId: string, reservationId: number) => {
 const getQuery = (request: HttpRequest, userId: string) => {
   switch (request.method) {
     case "GET": {
-      return getGetUserreservationsQuery(userId);
+      return getGetUserReservationsQuery(userId);
     }
     case "POST": {
       const reservation = request.body as IReservation;
-      return getAddreservationQuery(userId, reservation);
+      return getAddReservationQuery(userId, reservation);
     }
     case "DELETE": {
       const ReservationId = Number.parseInt(request.params.ReservationId);
-      return getDeleteVewhicleQuery(userId, ReservationId);
+      return getDeleteReservationQuery(userId, ReservationId);
     }
     default: {
       throw new Error("Unsupported HTTP method type");

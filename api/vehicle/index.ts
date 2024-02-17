@@ -22,7 +22,7 @@ const getUpdateVehicleQuery = (userId: string, vehicle: IVehicle) => {
           WHERE VehicleId = ${vehicle.VehicleId} AND UserId = '${userId}'`;
 }
 
-const getDeleteVewhicleQuery = (userId: string, vehicleId: number) => {
+const getDeleteVehicleQuery = (userId: string, vehicleId: number) => {
   return `DELETE FROM dbo.Vehicles 
           WHERE VehicleId = ${vehicleId} AND UserId = '${userId}'`;
 }
@@ -42,7 +42,7 @@ const getQuery = (request: HttpRequest, userId: string) => {
     }
     case "DELETE": {
       const vehicleId = Number.parseInt(request.params.VehicleId);
-      return getDeleteVewhicleQuery(userId, vehicleId);
+      return getDeleteVehicleQuery(userId, vehicleId);
     }
     default: {
       throw new Error("Unsupported HTTP method type");

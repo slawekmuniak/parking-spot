@@ -22,7 +22,11 @@ export default function ReservationFormDialog(props: {
     const handleSubmit = (ev: React.FormEvent) => {
         ev.preventDefault();
         props.onSubmit({
-            ReservationId: -1
+            ReservationId: -1,
+            ParkingSpotId: -1,
+            VehicleId: -1,
+            DateTimeFrom: new Date(),
+            DateTimeTo: new Date(),
         });
     };
 

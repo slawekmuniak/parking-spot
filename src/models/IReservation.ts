@@ -1,4 +1,8 @@
 
 export interface IReservation {
-  ReservationId: number
+  ReservationId: number;
+  ParkingSpotId: number;
+  VehicleId: number;
+  DateTimeFrom: Date;
+  DateTimeTo: Date;
 }

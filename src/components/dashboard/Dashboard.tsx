@@ -1,6 +1,6 @@
 import { ParkingSpotDashboard } from "../parkingSpots/ParkingSpotDashboard";
 import React from "react";
-import { ReservationPanel } from "../reservations/ReservationList";
+import { ReservationPanel } from "../reservations/ReservationPanel";
 import { VehiclesPanel } from "../vehicles/VehiclesPanel";
 
 export default function Dashboard() {

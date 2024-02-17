@@ -39,22 +39,18 @@ export const executeSqlQuery = <T>(query: string, connection: Connection) => {
     });
 
     request.on('row', columns => {
-      console.log("row")
       const item = {} as T;
       columns.forEach(column => {
-        console.log("column" + column)
         item[column.metadata.colName] = column.value;
       });
       res.push(item)
     });
 
     request.on('requestCompleted', () => {
-      console.log("requestCompleted" + res)
       resolve(res)
     });
 
     request.on("error", err => {
-      console.log(err)
       reject(err);
     });
 
