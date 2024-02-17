@@ -2,7 +2,7 @@ import { OnBehalfOfCredentialAuthConfig, OnBehalfOfUserCredential, UserInfo } fr
 import { TeamsFxContext } from "@microsoft/teamsfx-react";
 import config from "../config";
 
-export const getUser = (teamsfxContext: TeamsFxContext): UserInfo => {
+export const getCurrentUserInfo = (teamsfxContext: TeamsFxContext): UserInfo => {
   const oboAuthConfig: OnBehalfOfCredentialAuthConfig = {
     authorityHost: config.authorityHost,
     clientId: config.clientId,

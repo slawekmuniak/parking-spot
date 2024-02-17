@@ -3,8 +3,8 @@ import { TeamsFxContext } from "@microsoft/teamsfx-react";
 import { ErrorResponse, IResponse, OkResponse } from "../models/IResponse";
 import { IReservation } from "../models/IReservation";
 import { Connection } from "tedious";
-import { getUser } from "../common/user.service";
-import { execQuery, getConnection } from "../common/db.service";
+import { getCurrentUserInfo } from "../common/user.service";
+import { executeSqlQuery, getDbConnection } from "../common/db.service";
 
 const getGetUserreservationsQuery = (userId: string) => {
   return `SELECT ReservationId, VehicleId, From, To
@@ -44,13 +44,13 @@ const reservation: AzureFunction = async (context: Context, request: HttpRequest
 
   let connection: Connection;
   try {
-    const currentUser = getUser(teamsfxContext);
+    const currentUser = getCurrentUserInfo(teamsfxContext);
     const userId = currentUser.objectId;
     const query = getQuery(request, userId);
-    connection = await getConnection();
+    connection = await getDbConnection();
 
     const response = {
-      reservations: await execQuery(query, connection)
+      reservations: await executeSqlQuery(query, connection)
     };
 
     return Promise.resolve(OkResponse(response));

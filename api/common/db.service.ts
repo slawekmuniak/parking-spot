@@ -2,7 +2,7 @@
 import { Connection, Request } from "tedious";
 import config from "../config"
 
-export const getConnection = (): Promise<Connection> => {
+export const getDbConnection = (): Promise<Connection> => {
   const connection = new Connection({
     server: config.sqlEndpoint,
     options: {
@@ -18,18 +18,18 @@ export const getConnection = (): Promise<Connection> => {
     }
   });
 
-  return new Promise((resol ve, reject) => {
-  connection.on('connect', err => {
-    if (err) {
-      reject(err);
-    }
-    resolve(connection);
-  });
-  connection.connect();
-})
+  return new Promise((resolve, reject) => {
+    connection.on('connect', err => {
+      if (err) {
+        reject(err);
+      }
+      resolve(connection);
+    });
+    connection.connect();
+  })
 }
 
-export const execQuery = <T>(query: string, connection: Connection) => {
+export const executeSqlQuery = <T>(query: string, connection: Connection) => {
   return new Promise<T[]>((resolve, reject) => {
     const res: T[] = [];
     const request = new Request(query, (err) => {
