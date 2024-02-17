@@ -1,7 +1,9 @@
 import { TeamsUserCredential, TeamsUserCredentialAuthConfig } from "@microsoft/teamsfx";
 import axios, { AxiosRequestConfig } from "axios";
 import config from "../common/config";
-import { IVehiclesResponse } from "../models/IResponse";
+import { IReservation } from "../models/IReservation";
+import { IReservationsResponse } from "../models/IReservationsResponse";
+import { IVehiclesResponse } from "../models/IVehiclesResponse";
 import { IVehicle } from "../models/IVehicle";
 
 async function getAxiosRequestConfig(): Promise<AxiosRequestConfig> {
@@ -33,6 +35,22 @@ const API = {
   async removeVehicle(vehicleId: number) {
     const options = await getAxiosRequestConfig();
     return await axios.delete(`${config.apiEndpoint}/api/vehicle/${vehicleId}`, options);
+  },
+
+  async getReservations() {
+    const options = await getAxiosRequestConfig();
+    const response = await axios.get<IReservationsResponse>(`${config.apiEndpoint}/api/reservation`, options);
+    return response.data.reservations;
+  },
+
+  async addReservation(reservation: IReservation) {
+    const options = await getAxiosRequestConfig();
+    return await axios.post(`${config.apiEndpoint}/api/reservation`, reservation, options);
+  },
+
+  async removeReservation(reservationId: number) {
+    const options = await getAxiosRequestConfig();
+    return await axios.delete(`${config.apiEndpoint}/api/reservation/${reservationId}`, options);
   }
 }
 

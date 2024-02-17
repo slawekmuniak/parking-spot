@@ -1,9 +1,9 @@
 import { Button, Dialog, DialogActions, DialogBody, DialogContent, DialogSurface, DialogTitle, DialogTrigger } from "@fluentui/react-components";
 import React from "react";
 
-export default function ReservationRemoveConfirmationDialog(props: {
+export default function ReservationDeleteConfirmationDialog(props: {
   onOpenChange: (opened: boolean) => void
-  onRemove: () => void
+  onDeleteConfirmed: () => void
   showDialog: boolean
 }) {
   return (
@@ -18,7 +18,7 @@ export default function ReservationRemoveConfirmationDialog(props: {
             <DialogTrigger disableButtonEnhancement>
               <Button appearance="secondary">Cancel</Button>
             </DialogTrigger>
-            <Button appearance="primary" onClick={() => props.onRemove()}>Remove</Button>
+            <Button appearance="primary" onClick={() => props.onDeleteConfirmed()}>Remove</Button>
           </DialogActions>
         </DialogBody>
       </DialogSurface>

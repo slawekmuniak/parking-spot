@@ -5,13 +5,14 @@ import {
   EditRegular,
   DeleteRegular
 } from "@fluentui/react-icons";
-import { Button } from "@fluentui/react-components";
-import React, { useCallback, useEffect, useState } from "react";
+import { Button, Toast, ToastTitle, useToastController } from "@fluentui/react-components";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { IVehicle } from "../../models/IVehicle";
 import VehicleFormDialog from "./VehicleFormDialog";
 import VehicleDeleteConfirmationDialog from "./VehicleDeleteConfirmationDialog";
 import API from "../../services/api";
 import SimpleTable, { IActionDefinition, IColumnDefinition } from "../common/SimpleTable";
+import { TeamsFxContext } from "../TeamsFxContext";
 
 export function VehiclesPanel(): JSX.Element {
 
@@ -21,39 +22,51 @@ export function VehiclesPanel(): JSX.Element {
     RegistrationNumber: ""
   };
 
+  const { toasterId } = useContext(TeamsFxContext);
   const [loading, setLoading] = useState(false);
   const [vehicles, setVehicles] = useState<IVehicle[]>([]);
   const [showDeleteConfirmationDialog, setShowDeleteConfirmationDialog] = useState(false);
   const [showVehicleFormDialog, setShowVehicleFormDialog] = useState(false);
   const [activeVehicle, setActiveVehicle] = useState<IVehicle>(defaultVehicle);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const { dispatchToast } = useToastController(toasterId);
+
+  const notify = useCallback(() => {
+    dispatchToast(
+      <Toast appearance="inverted">
+        <ToastTitle>Cannot read data from server. Please try again later.</ToastTitle>
+      </Toast>,
+      { intent: "error" }
+    );
+  }, [dispatchToast]);
 
   const getVehicles = useCallback(async () => {
-    setLoading(true);
-    const vehicles = await API.getVehicles();
-    setVehicles(vehicles);
-    setLoading(false);
-  }, []);
+    try {
+      const vehicles = await API.getVehicles();
+      setVehicles(vehicles);
+    } catch (e) {
+      setVehicles([]);
+      notify();
+    }
+  }, [notify]);
 
   useEffect(() => {
-    getVehicles();
+    setLoading(true);
+    getVehicles().finally(() => {
+      setLoading(false);
+    });
   }, [getVehicles]);
 
   const onAddVehicle = () => {
     setActiveVehicle(defaultVehicle);
+    setIsEditMode(false);
     setShowVehicleFormDialog(true);
   }
 
   const onEditVehicle = (vehicle: IVehicle) => {
     setActiveVehicle(vehicle);
+    setIsEditMode(true);
     setShowVehicleFormDialog(true);
-  }
-
-  const onVehicleFormSubmitted = async (vehicle: IVehicle) => {
-    setLoading(true);
-    setShowVehicleFormDialog(false);
-    await API.addVehicle(vehicle);
-    getVehicles();
-    setLoading(false);
   }
 
   const onDeleteVehicle = (vehicle: IVehicle) => {
@@ -61,20 +74,28 @@ export function VehiclesPanel(): JSX.Element {
     setShowDeleteConfirmationDialog(true);
   }
 
-  const onDeleteConfirmed = async () => {
+  const onVehicleFormSubmitted = (vehicle: IVehicle) => {
+    setLoading(true);
+    setShowVehicleFormDialog(false);
+    API.addVehicle(vehicle).then(async () => {
+      await getVehicles();
+    }).catch(() => {
+      notify();
+    }).finally(() => {
+      setLoading(false);
+    });
+  }
+
+  const onDeleteConfirmed = () => {
     setLoading(true);
     setShowDeleteConfirmationDialog(false);
-    await API.removeVehicle(activeVehicle.VehicleId);
-    getVehicles();
-    setLoading(false);
-  }
-
-  const onDeleteConfirmationDialogOpenChanged = (open: boolean) => {
-    setShowDeleteConfirmationDialog(open);
-  }
-
-  const onVehicleFormDialogOpenChanged = (open: boolean) => {
-    setShowVehicleFormDialog(open);
+    API.removeVehicle(activeVehicle.VehicleId).then(async () => {
+      await getVehicles();
+    }).catch(() => {
+      notify();
+    }).finally(() => {
+      setLoading(false);
+    });
   }
 
   const columnDefinitions: IColumnDefinition[] = [{
@@ -101,7 +122,7 @@ export function VehiclesPanel(): JSX.Element {
     <div className="panel">
       <h4 className="title">
         <span>My vehicles</span>
-        <Button appearance="primary" aria-label="Add" onClick={() => { onAddVehicle() }}>+ Add vehicle</Button>
+        <Button appearance="primary" onClick={() => { onAddVehicle() }}>+ Add vehicle</Button>
       </h4>
       <SimpleTable
         loading={loading}
@@ -109,14 +130,15 @@ export function VehiclesPanel(): JSX.Element {
         actionsDefinition={actionsDefinitions}
         columnsDefinition={columnDefinitions} />
       <VehicleFormDialog
+        edit={isEditMode}
         vehicle={activeVehicle}
         showDialog={showVehicleFormDialog}
         onSubmit={onVehicleFormSubmitted}
-        onOpenChange={onVehicleFormDialogOpenChanged} />
+        onOpenChange={setShowVehicleFormDialog} />
       <VehicleDeleteConfirmationDialog
         showDialog={showDeleteConfirmationDialog}
         onDeleteConfirmed={onDeleteConfirmed}
-        onOpenChange={onDeleteConfirmationDialogOpenChanged} />
+        onOpenChange={setShowDeleteConfirmationDialog} />
     </div>
   );
 }

@@ -5,6 +5,7 @@ import {
   teamsDarkTheme,
   teamsHighContrastTheme,
   teamsLightTheme,
+  Toaster,
 } from "@fluentui/react-components";
 import { Navigate, Route, HashRouter as Router, Routes } from "react-router-dom";
 import Privacy from "./Privacy";
@@ -20,8 +21,10 @@ export default function App() {
     initiateLoginEndpoint: config.initiateLoginEndpoint!,
     clientId: config.clientId!,
   });
+
+  const toasterId = 'mainToaster';
   return (
-    <TeamsFxContext.Provider value={{ theme, themeString, teamsUserCredential }}>
+    <TeamsFxContext.Provider value={{ theme, themeString, teamsUserCredential, toasterId }}>
       <FluentProvider
         theme={
           themeString === "dark"
@@ -44,6 +47,7 @@ export default function App() {
             </Routes>
           )}
         </Router>
+        <Toaster toasterId={toasterId} />
       </FluentProvider>
     </TeamsFxContext.Provider>
   );

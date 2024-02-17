@@ -11,6 +11,7 @@ const useStyles = makeStyles({
 });
 
 export default function VehicleFormDialog(props: {
+  edit: boolean,
   showDialog: boolean,
   vehicle: IVehicle,
   onOpenChange: (open: boolean) => void,
@@ -41,8 +42,8 @@ export default function VehicleFormDialog(props: {
       <DialogSurface>
         <form onSubmit={handleSubmit}>
           <DialogBody>
-            <DialogTitle>Add vehicle</DialogTitle>
-            <DialogContent>
+            <DialogTitle>{(props.edit ? "Edit" : "Add") + " vehicle"}</DialogTitle>
+            <DialogContent className={styles.content}>
               <Label required htmlFor="registrationNumber">Registration number</Label>
               <Input
                 id="registrationNumber"
@@ -62,7 +63,7 @@ export default function VehicleFormDialog(props: {
             </DialogContent>
             <DialogActions>
               <DialogTrigger>
-                <Button appearance="secondary">Close</Button>
+                <Button appearance="secondary">Cancel</Button>
               </DialogTrigger>
               <Button type="submit" appearance="primary">Submit</Button>
             </DialogActions>

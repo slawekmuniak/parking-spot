@@ -13,47 +13,46 @@ const useStyles = makeStyles({
 });
 
 export default function ReservationFormDialog(props: {
-    reservatino: IReservation,
     showDialog: boolean,
     onOpenChange: (open: boolean) => void,
-    onSubmit: () => void
+    onSubmit: (reservation: IReservation) => void
 }) {
     const styles = useStyles();
 
     const handleSubmit = (ev: React.FormEvent) => {
         ev.preventDefault();
-        props.onSubmit();
+        props.onSubmit({
+            ReservationId: -1
+        });
     };
 
     return (
         <Dialog open={props.showDialog} onOpenChange={(event, data) => props.onOpenChange(data.open)}>
-            <DialogSurface aria-describedby={undefined}>
+            <DialogSurface>
                 <form onSubmit={handleSubmit}>
                     <DialogBody>
                         <DialogTitle>Add reservation</DialogTitle>
                         <DialogContent className={styles.content}>
-                            <Field label="Vehicle" required>
+                            <Field required label="Vehicle">
                                 <Combobox placeholder="Select an vehicle">
                                     <Option key={1}> ff </Option>
                                 </Combobox>
                             </Field>
-                            <Field label="Date" required>
+                            <Field required label="Date">
                                 <DatePicker placeholder="Select a date..." />
                             </Field>
-                            <Field label="From" required>
-                                <TimePicker/>
+                            <Field required label="From">
+                                <TimePicker />
                             </Field>
-                            <Field label="To" required>
-                                <TimePicker/>
+                            <Field required label="To" >
+                                <TimePicker />
                             </Field>
                         </DialogContent>
                         <DialogActions>
-                            <DialogTrigger disableButtonEnhancement>
-                                <Button appearance="secondary">Close</Button>
+                            <DialogTrigger>
+                                <Button appearance="secondary">Cancel</Button>
                             </DialogTrigger>
-                            <Button type="submit" appearance="primary">
-                                Submit
-                            </Button>
+                            <Button type="submit" appearance="primary">Submit</Button>
                         </DialogActions>
                     </DialogBody>
                 </form>
