@@ -1,53 +1,46 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions"
 import { TeamsFxContext } from "@microsoft/teamsfx-react";
 import { ErrorResponse, IResponse, OkResponse } from "../models/IResponse";
-import { IVehicle } from "../models/IVehicle";
+import { IReservation } from "../models/IReservation";
 import { Connection } from "tedious";
 import { getUser } from "../common/user.service";
 import { execQuery, getConnection } from "../common/db.service";
 
-const getGetUserVehiclesQuery = (userId: string) => {
-  return `SELECT VehicleId, RegistrationNumber, Description 
-          FROM dbo.Vehicles WHERE UserId = '${userId}'`;
+const getGetUserreservationsQuery = (userId: string) => {
+  return `SELECT ReservationId, VehicleId, From, To
+          FROM dbo.Reservations WHERE UserId = '${userId}'`;
 };
 
-const getAddVehicleQuery = (userId: string, vehicle: IVehicle) => {
-  return `INSERT INTO dbo.Vehicles (RegistrationNumber, [Description], UserId) 
-          VALUES (N'${vehicle.RegistrationNumber}', N'${vehicle.Description}', N'${userId}')`;
+const getAddreservationQuery = (userId: string, reservation: IReservation) => {
+  return `INSERT INTO dbo.Reservations (VehicleId, From, To, UserId) 
+          VALUES (N'${reservation.VehicleId}', N'${reservation.From}', N'${reservation.To}', N'${userId}')`;
 };
 
-const getUpdateVehicleQuery = (userId: string, vehicle: IVehicle) => {
-  return `UPDATE dbo.Vehicles 
-          SET RegistrationNumber = N'${vehicle.RegistrationNumber}', Description = N'${vehicle.Description}' 
-          WHERE VehicleId = ${vehicle.VehicleId} AND UserId = '${userId}'`;
-}
-
-const getDeleteVewhicleQuery = (userId: string, vehicleId: number) => {
-  return `DELETE FROM dbo.Vehicles 
-          WHERE VehicleId = ${vehicleId} AND UserId = '${userId}'`;
+const getDeleteVewhicleQuery = (userId: string, reservationId: number) => {
+  return `DELETE FROM dbo.Reservations 
+          WHERE ReservationId = ${reservationId} AND UserId = '${userId}'`;
 }
 
 const getQuery = (request: HttpRequest, userId: string) => {
   switch (request.method) {
     case "GET": {
-      return getGetUserVehiclesQuery(userId);
+      return getGetUserreservationsQuery(userId);
     }
     case "POST": {
-      const vehicle = request.body as IVehicle;
-      if (vehicle.VehicleId > 0) {
-        return getUpdateVehicleQuery(userId, vehicle);
-      } else {
-        return getAddVehicleQuery(userId, vehicle);
-      }
+      const reservation = request.body as IReservation;
+      return getAddreservationQuery(userId, reservation);
     }
     case "DELETE": {
-      const vehicleId = Number.parseInt(request.params.VehicleId);
-      return getDeleteVewhicleQuery(userId, vehicleId);
+      const ReservationId = Number.parseInt(request.params.ReservationId);
+      return getDeleteVewhicleQuery(userId, ReservationId);
+    }
+    default: {
+      throw new Error("Unsupported HTTP method type");
     }
   }
 }
 
-const vehicle: AzureFunction = async (context: Context, request: HttpRequest, teamsfxContext: TeamsFxContext): Promise<IResponse> => {
+const reservation: AzureFunction = async (context: Context, request: HttpRequest, teamsfxContext: TeamsFxContext): Promise<IResponse> => {
 
   let connection: Connection;
   try {
@@ -57,7 +50,7 @@ const vehicle: AzureFunction = async (context: Context, request: HttpRequest, te
     connection = await getConnection();
 
     const response = {
-      vehicles: await execQuery(query, connection)
+      reservations: await execQuery(query, connection)
     };
 
     return Promise.resolve(OkResponse(response));
@@ -69,4 +62,4 @@ const vehicle: AzureFunction = async (context: Context, request: HttpRequest, te
   }
 };
 
-export default vehicle;
+export default reservation;

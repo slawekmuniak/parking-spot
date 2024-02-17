@@ -44,6 +44,9 @@ const getQuery = (request: HttpRequest, userId: string) => {
       const vehicleId = Number.parseInt(request.params.VehicleId);
       return getDeleteVewhicleQuery(userId, vehicleId);
     }
+    default: {
+      throw new Error("Unsupported HTTP method type");
+    }
   }
 }
 
