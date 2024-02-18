@@ -1,7 +1,7 @@
 import { Button, Combobox, Dialog, DialogActions, DialogBody, DialogContent, DialogSurface, DialogTitle, DialogTrigger, Field, Option, makeStyles } from "@fluentui/react-components";
 import { DatePicker } from "@fluentui/react-datepicker-compat";
 import { IReservation } from "../../models/IReservation";
-import React from "react";
+import React, { useState } from "react";
 import { TimePicker } from "@fluentui/react-timepicker-compat";
 
 const useStyles = makeStyles({
@@ -18,16 +18,21 @@ export default function ReservationFormDialog(props: {
     onSubmit: (reservation: IReservation) => void
 }) {
     const styles = useStyles();
+    const [reservationDate, setReservationDate] = useState<Date | null>();
+    const [reservationTimeFrom, setReservationTimeFrom] = useState<Date | null>(null);
+    const [reservationTimeTo, setReservationTimeTo] = useState<Date | null>(null);
 
     const handleSubmit = (ev: React.FormEvent) => {
         ev.preventDefault();
-        props.onSubmit({
-            ReservationId: -1,
-            ParkingSpotId: -1,
-            VehicleId: -1,
-            DateTimeFrom: new Date(),
-            DateTimeTo: new Date(),
-        });
+        if (reservationDate && reservationTimeFrom && reservationTimeTo) {
+            props.onSubmit({
+                ReservationId: -1,
+                ParkingSpotId: 1,
+                VehicleId: 1,
+                DateTimeFrom: reservationTimeFrom,
+                DateTimeTo: reservationTimeTo,
+            });
+        }
     };
 
     return (
@@ -37,19 +42,30 @@ export default function ReservationFormDialog(props: {
                     <DialogBody>
                         <DialogTitle>Add reservation</DialogTitle>
                         <DialogContent className={styles.content}>
+                            <Field required label="Parking Spot">
+                                <Combobox placeholder="Select a parking spot">
+                                    <Option key={1}> ff </Option>
+                                </Combobox>
+                            </Field>
                             <Field required label="Vehicle">
-                                <Combobox placeholder="Select an vehicle">
+                                <Combobox placeholder="Select a vehicle">
                                     <Option key={1}> ff </Option>
                                 </Combobox>
                             </Field>
                             <Field required label="Date">
-                                <DatePicker placeholder="Select a date..." />
+                                <DatePicker
+                                    placeholder="Select a date..."
+                                    onSelectDate={(d) => { setReservationDate(d) }} />
                             </Field>
                             <Field required label="From">
-                                <TimePicker />
+                                <TimePicker
+                                    dateAnchor={reservationDate ?? undefined}
+                                    onTimeChange={(e, d) => { setReservationTimeFrom(d.selectedTime) }} />
                             </Field>
                             <Field required label="To" >
-                                <TimePicker />
+                                <TimePicker
+                                    dateAnchor={reservationDate ?? undefined}
+                                    onTimeChange={(e, d) => { setReservationTimeTo(d.selectedTime) }} />
                             </Field>
                         </DialogContent>
                         <DialogActions>

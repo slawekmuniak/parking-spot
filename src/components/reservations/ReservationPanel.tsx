@@ -85,15 +85,15 @@ export function ReservationPanel(): JSX.Element {
   }
 
   const columnDefinitions: IColumnDefinition[] = [{
-    columnKey: "RegistrationNumber",
+    columnKey: "VehicleId",
     label: "Registration Number",
     icon: <VehicleCarRegular />
   }, {
-    columnKey: "From",
+    columnKey: "DateTimeFrom",
     label: "From",
     icon: <ArrowExportRegular />
   }, {
-    columnKey: "To",
+    columnKey: "DateTimeTo",
     label: "To",
     icon: <ArrowImportRegular />
   }];
