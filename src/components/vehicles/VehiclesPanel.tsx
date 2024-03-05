@@ -42,7 +42,7 @@ export function VehiclesPanel(): JSX.Element {
 
   const getVehicles = useCallback(async () => {
     try {
-      const vehicles = await API.getVehicles();
+      const vehicles = await API.Vehicles.getVehicles();
       setVehicles(vehicles);
     } catch (e) {
       setVehicles([]);
@@ -77,7 +77,7 @@ export function VehiclesPanel(): JSX.Element {
   const onVehicleFormSubmitted = (vehicle: IVehicle) => {
     setLoading(true);
     setShowVehicleFormDialog(false);
-    API.addVehicle(vehicle).then(async () => {
+    API.Vehicles.addVehicle(vehicle).then(async () => {
       await getVehicles();
     }).catch(() => {
       notify();
@@ -89,7 +89,7 @@ export function VehiclesPanel(): JSX.Element {
   const onDeleteConfirmed = () => {
     setLoading(true);
     setShowDeleteConfirmationDialog(false);
-    API.removeVehicle(activeVehicle.VehicleId).then(async () => {
+    API.Vehicles.removeVehicle(activeVehicle.VehicleId).then(async () => {
       await getVehicles();
     }).catch(() => {
       notify();
@@ -98,7 +98,7 @@ export function VehiclesPanel(): JSX.Element {
     });
   }
 
-  const columnDefinitions: IColumnDefinition[] = [{
+  const columnDefinitions: IColumnDefinition<IVehicle>[] = [{
     columnKey: "RegistrationNumber",
     label: "Registration Number",
     icon: <VehicleCarRegular />

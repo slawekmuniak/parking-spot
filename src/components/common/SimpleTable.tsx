@@ -11,22 +11,23 @@ import {
 } from "@fluentui/react-components";
 import React from "react";
 
-export interface IColumnDefinition {
+export interface IColumnDefinition<T> {
   columnKey: string,
   label: string,
-  icon?: JSX.Element
+  icon?: JSX.Element,
+  format?: (item: T) => string,
 }
 
 export interface IActionDefinition {
   onClick: (item: any) => void,
   label: string,
-  icon: JSX.Element
+  icon: JSX.Element,
 }
 
-export default function SimpleTable(props: {
+export default function SimpleTable<T>(props: {
   loading: boolean,
   data: any[],
-  columnsDefinition: IColumnDefinition[],
+  columnsDefinition: IColumnDefinition<T>[],
   actionsDefinition?: IActionDefinition[]
 }): JSX.Element {
 
@@ -56,7 +57,7 @@ export default function SimpleTable(props: {
   const getItemsData = props.data.map((item, index) => (
     <TableRow key={index}>
       {props.columnsDefinition.map((column, index) => (
-        <TableCell key={index}>{item[column.columnKey]}</TableCell>
+        <TableCell key={index}>{column.format ? column.format(item) : item[column.columnKey]}</TableCell>
       ))}
       {getActionsTableCell(item)}
     </TableRow>

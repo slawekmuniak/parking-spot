@@ -34,7 +34,7 @@ export function ReservationPanel(): JSX.Element {
 
   const getReservations = useCallback(async () => {
     try {
-      const reservations = await API.getReservations();
+      const reservations = await API.Reservations.getReservations();
       setReservations(reservations);
     } catch (e) {
       setReservations([]);
@@ -60,7 +60,7 @@ export function ReservationPanel(): JSX.Element {
   const onReservationFormSubmitted = (reservation: IReservation) => {
     setLoading(true);
     setShowReservationFormDialog(false);
-    API.addReservation(reservation).then(async () => {
+    API.Reservations.addReservation(reservation).then(async () => {
       await getReservations();
     }).catch(() => {
       notify();
@@ -75,7 +75,7 @@ export function ReservationPanel(): JSX.Element {
     }
     setLoading(true);
     setShowDeleteConfirmationDialog(false);
-    API.removeReservation(activeReservation.ReservationId).then(async () => {
+    API.Reservations.removeReservation(activeReservation.ReservationId).then(async () => {
       await getReservations();
     }).catch(() => {
       notify();
@@ -84,18 +84,20 @@ export function ReservationPanel(): JSX.Element {
     });
   }
 
-  const columnDefinitions: IColumnDefinition[] = [{
+  const columnDefinitions: IColumnDefinition<IReservation>[] = [{
     columnKey: "VehicleId",
     label: "Registration Number",
     icon: <VehicleCarRegular />
   }, {
     columnKey: "DateTimeFrom",
     label: "From",
-    icon: <ArrowExportRegular />
+    icon: <ArrowExportRegular />,
+    format: (item) => `${item.DateTimeFrom.toLocaleDateString()} ${item.DateTimeFrom.toLocaleTimeString()}`,
   }, {
     columnKey: "DateTimeTo",
     label: "To",
-    icon: <ArrowImportRegular />
+    icon: <ArrowImportRegular />,
+    format: (item) => `${item.DateTimeTo.toLocaleDateString()} ${item.DateTimeTo.toLocaleTimeString()}`,
   }];
 
   const actionsDefinitions: IActionDefinition[] = [{

@@ -20,7 +20,7 @@ async function getAxiosRequestConfig(): Promise<AxiosRequestConfig> {
   }
 }
 
-const API = {
+const Vehicles = {
   async getVehicles() {
     const options = await getAxiosRequestConfig();
     const response = await axios.get<IVehiclesResponse>(`${config.apiEndpoint}/api/vehicle`, options);
@@ -36,11 +36,26 @@ const API = {
     const options = await getAxiosRequestConfig();
     return await axios.delete(`${config.apiEndpoint}/api/vehicle/${vehicleId}`, options);
   },
+}
 
-  async getReservations() {
-    const options = await getAxiosRequestConfig();
-    const response = await axios.get<IReservationsResponse>(`${config.apiEndpoint}/api/reservation`, options);
-    return response.data.reservations;
+const Reservations = {
+  async getReservations(): Promise<IReservation[]> {
+    return new Promise<IReservation[]>(async (resolve, reject) => {
+      const options = await getAxiosRequestConfig();
+      const response = await axios.get<IReservationsResponse>(`${config.apiEndpoint}/api/reservation`, options);
+      if (response.data.error) {
+        reject("Error");
+        return;
+      }
+      const data = response.data.reservations.map<IReservation>((r) => ({
+        VehicleId: r.VehicleId,
+        ParkingSpotId: r.ParkingSpotId,
+        ReservationId: r.ReservationId,
+        DateTimeFrom: new Date(r.DateTimeFrom),
+        DateTimeTo: new Date(r.DateTimeTo)
+      }));
+      resolve(data);
+    })
   },
 
   async addReservation(reservation: IReservation) {
@@ -52,6 +67,11 @@ const API = {
     const options = await getAxiosRequestConfig();
     return await axios.delete(`${config.apiEndpoint}/api/reservation/${reservationId}`, options);
   }
+}
+
+const API = {
+  Vehicles,
+  Reservations
 }
 
 export default API;

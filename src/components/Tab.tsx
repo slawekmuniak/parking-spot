@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { AccessToken } from '@azure/identity';
 import Dashboard from "./dashboard/Dashboard";
 import Login from "./login/Login";
@@ -11,7 +11,8 @@ export default function Tab() {
   const [token, setToken] = useState<AccessToken | null>();
   const [isLoading, setIsLoading] = useState(true);
   const { teamsUserCredential } = useContext(TeamsFxContext);
-  const scope = ["User.Read", "User.ReadBasic.All"];
+  const scope = useMemo(() => (["User.Read", "User.ReadBasic.All"])
+    , []);
 
   useEffect(() => {
     async function getToken(): Promise<void> {
@@ -28,7 +29,7 @@ export default function Tab() {
     if (!token) {
       getToken();
     }
-  }, []);
+  }, [scope, teamsUserCredential, token]);
 
   const loginBtnClick = async () => {
     try {
